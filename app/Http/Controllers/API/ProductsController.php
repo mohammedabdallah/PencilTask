@@ -32,13 +32,24 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
+        $path = '';
+        if($request['product_image']){
+            $product_image = $request->file('product_image');
+
+            $name=$product_image->getClientOriginalName();
+
+            $uploaded_file = $product_image->move(public_path().'/uploads/', $name);
+            $path          = \URL::to('/uploads/'.$uploaded_file->getFileName());
+        }
         $product = Product::create([
           'id'   => Uuid::uuid4(),
           'name' => $request['name'],
           'code' => $request['code'],
           'price'=> $request['price'],
-          'description' => $request['description']
+          'description' => $request['description'],
+          'image_path'  => $path
         ]);
+
         return response()->json([
             'code'   => 201,
             'message'=> 'Successfully added'
