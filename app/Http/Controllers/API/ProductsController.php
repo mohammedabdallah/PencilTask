@@ -44,6 +44,31 @@ class ProductsController extends Controller
             'message'=> 'Successfully added'
         ]);
     }
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Product  $product
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Product $product)
+    {
+        return response()->json([
+            'status'=>200,
+            'product'=>$product
+        ]);
+    }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Product  $product
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Product $product)
+    {
+        //
+        $product->update($request->all());  
+    }
     public function destroy($id)
     {
         //
