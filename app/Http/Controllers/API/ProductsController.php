@@ -21,7 +21,7 @@ class ProductsController extends Controller
         $products = Product::all();
         return response()->json([
             'status' => 200,
-            'products' => $products
+            'Allproducts' => $products
         ]);
     }
     /**
@@ -43,5 +43,21 @@ class ProductsController extends Controller
             'code'   => 201,
             'message'=> 'Successfully added'
         ]);
+    }
+    public function destroy($id)
+    {
+        //
+        $product = Product::find($id);
+        $deleteProdut = $product->delete();
+        if($deleteProdut)
+            return response()->json([
+                'deleted'=>true,
+                'status'=>200
+            ]);
+        else
+            return response()->json([
+                'deleted'=>false,
+                'status' => 404,
+            ]);
     }
 }
