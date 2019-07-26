@@ -32,6 +32,13 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
+        $input = $request->all();
+        $validatedData = \Validator::make($request->all(),Product::$rules);
+         if ($validatedData->fails()) {
+
+          return response()->json(['errors'=>$validatedData->errors()]);
+        }
+
         $path = '';
         if($request['product_image']){
             $product_image = $request->file('product_image');

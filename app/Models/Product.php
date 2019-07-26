@@ -16,5 +16,12 @@ class Product extends Model
     protected $fillable = [
         'id', 'name', 'code', 'price', 'image_path', 'description'
     ];
+    public static $rules = 
+    [
+        'name' => 'required',
+        'code' => 'required',
+        'price'=> 'required',
+        'product_image' => 'required'  
+    ];
 
 }
