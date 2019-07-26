@@ -18,8 +18,8 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->string('code');
             $table->double('price');
-            $table->string('image_path');
-            $table->string('description');
+            $table->string('image_path')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
