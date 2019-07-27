@@ -8,9 +8,13 @@ use Ramsey\Uuid\Uuid;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
-
+use App\Services\ProductService;
 class ProductsController extends Controller
 {
+    private $productServiceObj;
+    public function __construct(ProductService $productServiceObj) {
+        $this->productServiceObj = $productServiceObj;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -18,11 +22,8 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
-        return response()->json([
-            'status' => 200,
-            'Allproducts' => $products
-        ]);
+        return Product::all();
+       
     }
     /**
      * Store a newly created resource in storage.
@@ -32,7 +33,6 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
         $validatedData = \Validator::make($request->all(),Product::$rules);
          if ($validatedData->fails()) {
 
@@ -48,6 +48,8 @@ class ProductsController extends Controller
             $uploaded_file = $product_image->move(public_path().'/uploads/', $name);
             $path          = \URL::to('/uploads/'.$uploaded_file->getFileName());
         }
+        //stuck with formatting custom field objec in angular side
+        //$this->productServiceObj->createColumnsinRunTime($request['customfields']);
         $product = Product::create([
           'id'   => Uuid::uuid4(),
           'name' => $request['name'],
@@ -56,7 +58,6 @@ class ProductsController extends Controller
           'description' => $request['description'],
           'image_path'  => $path
         ]);
-
         return response()->json([
             'code'   => 201,
             'message'=> 'Successfully added'
@@ -70,10 +71,7 @@ class ProductsController extends Controller
      */
     public function show(Product $product)
     {
-        return response()->json([
-            'status'=>200,
-            'product'=>$product
-        ]);
+        return $product;
     }
     /**
      * Update the specified resource in storage.
@@ -85,7 +83,20 @@ class ProductsController extends Controller
     public function update(Request $request, Product $product)
     {
         //
-        $product->update($request->all());  
+        return $request;
+        if($request['product_image']){
+            $product_image = $request->file('product_image');
+
+            $name=$product_image->getClientOriginalName();
+
+            $uploaded_file = $product_image->move(public_path().'/uploads/', $name);
+            $request['image_path']         = \URL::to('/uploads/'.$uploaded_file->getFileName());
+        }
+        $product->update($request->all());
+        return response()->json([
+            'status'=>200,
+            'message'=>$product
+        ]);
     }
     public function destroy($id)
     {
