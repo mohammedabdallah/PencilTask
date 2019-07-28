@@ -59,7 +59,7 @@ class ProductsController extends Controller
         ]);
         $columns = json_decode($request['customfields'],true);
         $this->productServiceObj->createColumnsinRunTime($columns,$product);
-        return $this->productServiceObj->attachValuestoCreatedColumns($columns,$product);
+        $this->productServiceObj->attachValuestoCreatedColumns($columns,$product);
         return response()->json([
             'code'   => 201,
             'message'=> 'Successfully added'
