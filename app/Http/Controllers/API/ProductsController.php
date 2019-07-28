@@ -49,7 +49,6 @@ class ProductsController extends Controller
             $path          = \URL::to('/uploads/'.$uploaded_file->getFileName());
         }
         //stuck with formatting custom field objec in angular side
-        //$this->productServiceObj->createColumnsinRunTime($request['customfields']);
         $product = Product::create([
           'id'   => Uuid::uuid4(),
           'name' => $request['name'],
@@ -58,6 +57,9 @@ class ProductsController extends Controller
           'description' => $request['description'],
           'image_path'  => $path
         ]);
+        $columns = json_decode($request['customfields'],true);
+        $this->productServiceObj->createColumnsinRunTime($columns,$product);
+        return $this->productServiceObj->attachValuestoCreatedColumns($columns,$product);
         return response()->json([
             'code'   => 201,
             'message'=> 'Successfully added'
@@ -83,7 +85,6 @@ class ProductsController extends Controller
     public function update(Request $request, Product $product)
     {
         //
-        return $request;
         if($request['product_image']){
             $product_image = $request->file('product_image');
 
