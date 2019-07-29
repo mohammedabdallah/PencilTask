@@ -85,6 +85,7 @@ class ProductsController extends Controller
     public function update(Request $request, Product $product)
     {
         //
+        $product->update($request->all());
         if($request['product_image']){
             $product_image = $request->file('product_image');
 
@@ -93,7 +94,6 @@ class ProductsController extends Controller
             $uploaded_file = $product_image->move(public_path().'/uploads/', $name);
             $request['image_path']         = \URL::to('/uploads/'.$uploaded_file->getFileName());
         }
-        $product->update($request->all());
         return response()->json([
             'status'=>200,
             'message'=>$product
